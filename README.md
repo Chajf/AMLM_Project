@@ -80,7 +80,7 @@ Ostatecznie model osiągnał wynik 198.376 na zbiorze walidacyjnym po 27 epokach
 
 Predykcja otrzymane dla przykładowego tekstu:
 
-'The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services.'
+`'The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services.'`
 
 Wygląda następująco:
 
