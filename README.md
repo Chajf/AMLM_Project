@@ -11,12 +11,12 @@ Projekt wykorzystuje techniki głębokiego uczenia, w tym przetwarzanie języka 
 ### Pobranie
 
 Wykorzystany zbiór danych do tego zadania zawierał 5,521 rekordów z czego w każdym znajdowały się następujące inforamcje:
-- identyfikator filmu na youtube
-- sekunda początku i końca fragmentu utworu
-- lista cech opisująca muzykę - przykładowo `["pop", "tinny wide hi hats", "mellow piano melody", "high pitched female vocal melody", "sustained pulsating synth lead"]`
-- opis tekstowy utworu - przykładowo `"A low sounding male voice is rapping over a fast paced drums playing a reggaeton beat along with a bass. Something like a guitar is playing the melody along. This recording is of poor audio-quality. In the background a laughter can be noticed. This song may be playing in a bar."`
+- identyfikator filmu na youtube,
+- sekunda początku i końca fragmentu utworu,
+- lista cech opisująca muzykę - przykładowo `["pop", "tinny wide hi hats", "mellow piano melody", "high pitched female vocal melody", "sustained pulsating synth lead"]`,
+- opis tekstowy utworu - przykładowo `"A low sounding male voice is rapping over a fast paced drums playing a reggaeton beat along with a bass. Something like a guitar is playing the melody along. This recording is of poor audio-quality. In the background a laughter can be noticed. This song may be playing in a bar."`.
 
-Poprzez identyfikator oraz flagę startu i końca fragmentu z wykorzystaniem biblioteki `yt-dlp` pobierane zostały wszystkie pliki z rozszerzeniem `.wav`
+Poprzez identyfikator oraz flagę startu i końca fragmentu z wykorzystaniem biblioteki `yt-dlp` pobrane zostały wszystkie pliki z rozszerzeniem `.wav`
 
 ### Preprocessing
 
@@ -43,11 +43,11 @@ Spektogramy w procesie szkolenia są postaci macierzy w formacie `numpy` o kszta
 Podejście do tego zadania opierało się przede wszystkim na dwóch głównych elementach architektury tj. transformerach oraz sieciach LSTM oraz dwóch podejściach do wykorzystania dostępnego tekstu, czyli mniejsze wejście z wykorzystaniem listy cech lub wejście rozszerzone gdzie wprowadzany był cały tekst opisujący dany dźwięk.
 W oparciu o te założenia sprawdzane oraz uczone było wiele architektur z wykorzystaniem akceleracji na GPU P100.
 
-Żadna z sieci niestety nie przyniosła zakładanych wyników które pozowliłby wygenerować dźwięk nie będący szumem.
+Żadna z sieci niestety nie przyniosła zakładanych wyników, które pozwoliłyby wygenerować dźwięk nie będący szumem.
 
 ### Architektura modelu
 
-Architekturą która osiągneła najlepsze wyniki jest `MusicGenerationModel` która łączy przetwarzanie języka naturalnego z modelowaniem sekwencji w celu generowania spektrogramów mel z opisów tekstowych. Poniżej znajduje się szczegółowy opis każdego komponentu:
+Architekturą, która osiągneła najlepsze wyniki jest `MusicGenerationModel` łącząca przetwarzanie języka naturalnego z modelowaniem sekwencji w celu generowania spektrogramów mel z opisów tekstowych. Poniżej znajduje się szczegółowy opis każdego komponentu:
 
 1. Tokenizer i enkoder BERT:
     - **Tokenizer**: `BertTokenizer` służy do tokenizacji wejściowych opisów tekstowych. Konwertuje on tekst do formatu odpowiedniego dla modelu BERT.
@@ -65,12 +65,12 @@ Architekturą która osiągneła najlepsze wyniki jest `MusicGenerationModel` kt
 ### Proces uczenia
 
 W procesie uczenia wykorzystane zostały następujące działania:
-- Funkcja strarty: Funkcja straty używana w tym modelu **Mean Squared Error Loss (MSELoss)**. Jest ona powszechnie stosowana w zadaniach regresji, w których celem jest zminimalizowanie różnicy między wartościami przewidywanymi i rzeczywistymi. W tym przypadku pomaga ona zmierzyć, jak blisko rzeczywistych wartości znajdują się wygenerowane wartości spektrogramu Mel.
+- Funkcja straty: Funkcja straty używana w tym modelu **Mean Squared Error Loss (MSELoss)**. Jest ona powszechnie stosowana w zadaniach regresji, w których celem jest zminimalizowanie różnicy między wartościami przewidywanymi i rzeczywistymi. W tym przypadku pomaga ona zmierzyć, jak blisko rzeczywistych wartości znajdują się wygenerowane wartości spektrogramu Mel.
 - Optimizer: Zastosowany optymalizator to **Adam**, który jest adaptacyjnym algorytmem optymalizacji szybkości uczenia się. Został on zaprojektowany do obsługi rzadkich gradientów w zaszumionych problemach. Współczynnik uczenia (lr) jest ustawiony na 1e-5, co kontroluje wielkość kroku podczas procesu optymalizacji.
 - Cosine Annealing Learning Rate Scheduler: Harmonogram tempa uczenia dostosowuje tempo uczenia podczas szkolenia. Harmonogram `CosineAnnealingLR` zmniejsza szybkość uczenia się zgodnie z krzywą kosinusową, co pomaga w stopniowym zmniejszaniu szybkości uczenia się i może prowadzić do lepszej zbieżności. Parametr `T_max` jest ustawiony na liczbę epok (50), wskazując okres wyżarzania kosinusowego.
 - Early Stopping: Jest to technika zapobiegająca nadmiernemu dopasowaniu poprzez zatrzymanie procesu uczenia, jeśli strata walidacyjna nie poprawi się przez określoną liczbę epok (`early_stopping_patience`). Zmienna `best_loss` jest inicjowana na dużą wartość, aby śledzić najniższą stratę walidacyjną, a licznik `early_stopping_counter` śledzi, ile epok minęło od ostatniej poprawy.
 
-Ostatecznie model osiągnał wynik 198.376 na zbiorze walidacyjnym po 27 epokach traningu (~11,5h).
+Ostatecznie model osiągnął wynik 198.376 na zbiorze walidacyjnym po 27 epokach traningu (~11,5h).
 
 <p align="center">
   <img src="/images/losses.png">
@@ -78,7 +78,7 @@ Ostatecznie model osiągnał wynik 198.376 na zbiorze walidacyjnym po 27 epokach
 
 ### Predykcja modelu
 
-Predykcja otrzymane dla przykładowego tekstu:
+Predykcja otrzymana dla przykładowego tekstu:
 
 `'The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services.'`
 
